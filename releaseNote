@@ -1,0 +1,66 @@
+1. fisrt version design for java
+
+prepare methods:
+ctags create tags files.
+	ctags  --language-force=java XXX.java -f /tmp/XXX_tags
+
+grep or awk find class tags and method tags
+	grep '      m       ' /tmp/XXX_tags > /tmp/XXX_method_tags
+//NOT DO:	grep '      c       ' /tmp/XXX_tags > /tmp/XXX_class_tags
+
+	or awk multi rule
+
+// NOT DO:	filter constractor methods
+	awk '{print $1}' XXX_method_tags > awkP1_XXX_method_tags
+	for i in `awk '{print $1}' XXX_class_tags` ;do grep "\<$i\>" -n awkP1_XXX_method_tags; done
+
+	implement interface will cause problem, can be ok by manual change or compile syntax check.
+
+pick up full method defination with return value and parameters. The string in /^
+	grep -o "/\\^.*\\$"  XXX_method_tags |awk -F "/\\^" '{print $2}' | awk -F '\\$' '{print $1}'> /tmp/XXX_method_full_name_tags
+	or
+	grep -o "/\\^.*\\$"  XXX_method_tags |awk -F '/\\^' '{print $2}'
+
+	some method in ctags db not have "{", like the line in source code. 
+
+            grep -o "/\\^.*\\$" xxx_method_tags | awk -F '/\\^' '{ split($2, a, "("); print a[1]}' > XXX_method_return_name_tags
+
+
+	* finally ,use wc to check /tmp/XXX_method_tags, /tmp/XXX_method_full_name_tags, XXX_method_return_name_tags line number is better.
+
+
+use the full method dafination to grep in the source code.
+		TODO: use regexp. If seperator like space count is different.?? Not regexp, what about split by ","  compare two array len and elements or use a stack to check??
+
+	note: the define in ctags database have front spaces, but grep result not have. e.g. LINE=`grep "   xxx" file`, but echo $LINE is xxx
+
+
+	This step will have two result:
+	1. get the result if the method have no parameters or have little parameters.
+		1.1 remove the space and tab in front of the line, split by space and check whether same.
+           reduce no result handle complexity.
+
+	2. No result, the method have multi-line parameters.
+           Use return value and function name to search.
+
+
+	//NOT DO: as no result,so could not get the line. 	   get the next line in source and check whether have {. Combine these lines to be one line. use regexp to check?? or split ??
+	
+
+Add the Log code in the next line.
+
+Dafult 1:
+
+should check class, so far only check overload function.
+Todo: record the insert method line number.
+
+FunctionYYY      XXX.java       /^            public void FunctionYYY() {$/;"    m       class:XXX.AAA.BBB
+FunctionYYY      XXX.java       /^        public void FunctionYYY() {$/;"        m       class:XXX.CCC
+FunctionYYY      XXX.java       /^        public void FunctionYYY() {$/;"        m       class:XXX.DDD
+FunctionYYY      XXX.java       /^        public void FunctionYYY() {$/;"        m       class:XXX.EEE
+FunctionYYY      XXX.java       /^        public void FunctionYYY() {$/;"        m       class:XXX.FFF
+FunctionYYY      XXX.java       /^        public void FunctionYYY() {$/;"        m       class:XXX.GGG
+
+Dafult 2:
+
+Function in comments should not be check.
