@@ -84,7 +84,9 @@ function funcFindBrace() {
 
     echo "**************************************************"
     LOG_SRC=` cat /tmp/tmpGrepCond_tmp | tr '\n{' " " ; echo`
-    echo ${LOG_SRC}
+    echo ${LOG_SRC} | tee /tmp/logSrcTmpleo
+    LOG_SRC=`sed 's/ \([a-zA-Z0-9_\-]*\) *\([,)]\)/ \1 :\" + \1 + \"\2/g' /tmp/logSrcTmpleo`
+    echo $LOG_SRC
     ##################################################
     # call function funcparametesexpend
     funcParametesExpend
