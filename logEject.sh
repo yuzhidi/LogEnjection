@@ -15,6 +15,22 @@ LINE_ADDR=
 FOUND_BRACE=
 BraceExitLine=
 LOG_SRC=
+
+#########################
+#change paramters a b  > a"+a+"b"+b
+function funcParametesExpend() {
+echo "funcParametesExpend ENTER"
+}
+
+#########################
+# call function handle paramters has [
+function funcHandleSquareBrackets() {
+echo $COND > /tmp/tmpHandleParametesSquareBrackets
+sed 's/\[/\\[/g' /tmp/tmpHandleParametesSquareBrackets > /tmp/tmpHandleParametesSquareBracketsTmp
+COND=`cat /tmp/tmpHandleParametesSquareBracketsTmp`
+echo "funcHandleSquareBrackets : $COND"
+}
+
 #########################
 #1.find the insert line
 #2.sed insert
@@ -57,6 +73,9 @@ function funcFindBrace() {
         then
                 BraceExitLine=$((${BraceExitLine}+1))
     fi
+    #################################################
+    # check constructor nested
+
     ##################################################
     # eject
     #echo "eject"
@@ -66,7 +85,12 @@ function funcFindBrace() {
     echo "**************************************************"
     LOG_SRC=` cat /tmp/tmpGrepCond_tmp | tr '\n{' " " ; echo`
     echo ${LOG_SRC}
-    sed -e "${BraceExitLine} a\ Log.d(TAG,\"leoAutoLog ${LOG_SRC}\");" ${TMP_DIR_BASE_NAME} > /tmp/source_temp.java
+    ##################################################
+    # call function funcparametesexpend
+    funcParametesExpend
+    ##################################################
+
+    sed -e "${BraceExitLine} a\ Log.d(TAG,\"leoLog ${LOG_SRC}\");" ${TMP_DIR_BASE_NAME} > /tmp/source_temp.java
     mv /tmp/source_temp.java ${TMP_DIR_BASE_NAME}
     #sleep 10 #debug
     echo "#################################################"
@@ -143,6 +167,11 @@ do
     # only handle only match once
     #
     COND=`sed -n "${i}, ${i} p" ${TMP_DIR_BASE_NAME}_method_def_line_tags`
+    echo $COND
+
+    # call function funcHandlesquarebrackets
+    funcHandleSquareBrackets
+
     FOUND_COUNT=`grep "$COND" ${TMP_DIR_BASE_NAME} | wc -l`
 
     # grep fail

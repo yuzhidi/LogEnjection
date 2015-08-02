@@ -4,30 +4,11 @@
 只加入一个函数的问题
 有return的问题
 只打印指定函数的问题
+Constructor nested
+
 
 可以参考的solution:
 ---------------------------------------
-解决函数中有[]的问题
- 
-$ sed 's/\[/\\[/g' tgsrc| tee file
-funca(\[])
-funcb(\[],a b, \[])
-
-
-$ sed -n '2, 2 p' file
-funcb(\[],a b, \[])
-
-
-$ S=`sed -n '2, 2 p' file`
-
-
-$ echo $S
-funcb(\[],a b, \[])
-
-
-$ grep "$S" tgsrc
-funcb([],a b, [])
-------------------------------------------
 解决a b变成"a"+b
 $  sed 's/^/"/' log
 "a b
