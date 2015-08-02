@@ -5,14 +5,4 @@
 有return的问题
 只打印指定函数的问题
 Constructor nested
-
-
-可以参考的solution:
----------------------------------------
-解决a b变成"a"+b
-$  sed 's/^/"/' log
-"a b
-
-$  sed 's/ /\"+/' log
-a"+b
-
+解决参数a b, c d变成 a b:"+b+", c  d:"+d
