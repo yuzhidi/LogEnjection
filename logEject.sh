@@ -26,14 +26,14 @@ echo "funcParametesExpend ENTER"
 # call function handle paramters has [
 function funcHandleSquareBrackets() {
 echo $COND > /tmp/tmpHandleParametesSquareBrackets
-sed 's/\[/\\[/g' /tmp/tmpHandleParametesSquareBrackets > /tmp/tmpHandleParametesSquareBracketsTmp
+gsed 's/\[/\\[/g' /tmp/tmpHandleParametesSquareBrackets > /tmp/tmpHandleParametesSquareBracketsTmp
 COND=`cat /tmp/tmpHandleParametesSquareBracketsTmp`
 echo "funcHandleSquareBrackets : $COND"
 }
 
 #########################
 #1.find the insert line
-#2.sed insert
+#2.gsed insert
 #########################
 function funcFindBrace() {
     #echo "funcFindBrace ENTER"
@@ -52,7 +52,7 @@ function funcFindBrace() {
                 i=4 #return
             else
                 BraceExitLine=$((${BraceExitLine}+1))
-                sed -n "${BraceExitLine}, ${BraceExitLine} p" ${TMP_DIR_BASE_NAME} >> /tmp/tmpGrepCond
+                gsed -n "${BraceExitLine}, ${BraceExitLine} p" ${TMP_DIR_BASE_NAME} >> /tmp/tmpGrepCond
                 cat /tmp/tmpGrepCond
         fi
     done
@@ -67,7 +67,7 @@ function funcFindBrace() {
     fi
     #################################################
     # check super
-    sed -n "$((${BraceExitLine}+1)), $((${BraceExitLine}+1)) p" ${TMP_DIR_BASE_NAME} > /tmp/tmpSuper
+    gsed -n "$((${BraceExitLine}+1)), $((${BraceExitLine}+1)) p" ${TMP_DIR_BASE_NAME} > /tmp/tmpSuper
     local FOUND_SUPER=`grep "super" /tmp/tmpSuper|wc -l`
     if test ${FOUND_SUPER} -ne 0
         then
@@ -80,19 +80,19 @@ function funcFindBrace() {
     # eject
     #echo "eject"
 
-    sed 's/\s/ /g' /tmp/tmpGrepCond |  sed 's/^[[:space:]]*//g' > /tmp/tmpGrepCond_tmp
+    gsed 's/\s/ /g' /tmp/tmpGrepCond |  gsed 's/^[[:space:]]*//g' > /tmp/tmpGrepCond_tmp
 
     echo "**************************************************"
     LOG_SRC=` cat /tmp/tmpGrepCond_tmp | tr '\n{' " " ; echo`
     echo ${LOG_SRC} | tee /tmp/logSrcTmpleo
-    LOG_SRC=`sed 's/ \([a-zA-Z0-9_\-]*\) *\([,)]\)/ \1 :\" + \1 + \"\2/g' /tmp/logSrcTmpleo`
+    LOG_SRC=`gsed 's/ \([a-zA-Z0-9_\-]*\) *\([,)]\)/ \1 :\" + \1 + \"\2/g' /tmp/logSrcTmpleo`
     echo $LOG_SRC
     ##################################################
     # call function funcparametesexpend
     funcParametesExpend
     ##################################################
 
-    sed -e "${BraceExitLine} a\ Log.d(TAG,\"leoLog ${LOG_SRC}\");" ${TMP_DIR_BASE_NAME} > /tmp/source_temp.java
+    gsed -e "${BraceExitLine} a\ Log.d(TAG,\"leoLog ${LOG_SRC}\");" ${TMP_DIR_BASE_NAME} > /tmp/source_temp.java
     mv /tmp/source_temp.java ${TMP_DIR_BASE_NAME}
     #sleep 10 #debug
     echo "#################################################"
@@ -168,7 +168,7 @@ do
     #
     # only handle only match once
     #
-    COND=`sed -n "${i}, ${i} p" ${TMP_DIR_BASE_NAME}_method_def_line_tags`
+    COND=`gsed -n "${i}, ${i} p" ${TMP_DIR_BASE_NAME}_method_def_line_tags`
     echo $COND
 
     # call function funcHandlesquarebrackets
