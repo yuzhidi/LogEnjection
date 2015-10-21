@@ -151,12 +151,12 @@ ctags --language-force=java -f "${TMP_DIR_BASE_NAME}_tags" ${TMP_DIR_BASE_NAME}
 
 #######################
 # only methods
-echo "grep '	m	' ${TMP_DIR_BASE_NAME}_tags > TMP_DIR_BASE_NAME_method_tags"
-grep '	m	' ${TMP_DIR_BASE_NAME}_tags > TMP_DIR_BASE_NAME_method_tags
+echo "grep '	m	' ${TMP_DIR_BASE_NAME}_tags > ${TMP_DIR_BASE_NAME}_method_tags"
+grep '	m	' ${TMP_DIR_BASE_NAME}_tags > ${TMP_DIR_BASE_NAME}_method_tags
 
 # print cmd
-echo 'grep -o "/\\^.*\\$" TMP_DIR_BASE_NAME_method_tags | awk -F '/\\^' '{print $2}' | awk -F '\\$' '{print $1}' >  ${TMP_DIR_BASE_NAME}_method_def_line_tags'
-grep -o "/\\^.*\\$" TMP_DIR_BASE_NAME_method_tags | awk -F '/\\^' '{print $2}' | awk -F '\\$' '{print $1}' >  ${TMP_DIR_BASE_NAME}_method_def_line_tags
+echo 'grep -o "/\\^.*\\$" ${TMP_DIR_BASE_NAME}_method_tags | awk -F '/\\^' '{print $2}' | awk -F '\\$' '{print $1}' >  ${TMP_DIR_BASE_NAME}_method_def_line_tags'
+grep -o "/\\^.*\\$" ${TMP_DIR_BASE_NAME}_method_tags | awk -F '/\\^' '{print $2}' | awk -F '\\$' '{print $1}' >  ${TMP_DIR_BASE_NAME}_method_def_line_tags
 
 wc ${TMP_DIR_BASE_NAME}_method_def_line_tags
 LINE_NUM=`wc -l ${TMP_DIR_BASE_NAME}_method_def_line_tags | awk '{print $1}'`
