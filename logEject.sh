@@ -92,7 +92,7 @@ function funcFindBrace() {
     funcParametesExpend
     ##################################################
 
-    gsed -e "${BraceExitLine} a\        Log.d(TAG, \"leoLog ${LOG_SRC}\");" ${TMP_DIR_BASE_NAME} > /tmp/source_temp.java
+    gsed -e "${BraceExitLine} a\        Log.w(TAG, \"leoLog ${LOG_SRC}\");" ${TMP_DIR_BASE_NAME} > /tmp/source_temp.java
     mv /tmp/source_temp.java ${TMP_DIR_BASE_NAME}
     #sleep 10 #debug
     echo "#################################################"
