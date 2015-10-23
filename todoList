@@ -1,6 +1,7 @@
 2015-10-23
 
 还需要解决：
+增加private static final String TAG = "";可利用类名等于文件名解决
 只加入一个函数的问题
 有return的问题
 只打印指定函数的问题
